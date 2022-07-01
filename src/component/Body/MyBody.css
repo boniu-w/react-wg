@@ -1,0 +1,29 @@
+#myBody{
+    /*background-color: #61dafb;*/
+    height: 800px;
+}
+
+#customers {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #F0FFFF;}
+
+#customers tr:hover {
+    background-color: #008080;
+    color: white;
+}
+
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #008080;
+    color: white;
+}

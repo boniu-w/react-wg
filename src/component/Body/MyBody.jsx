@@ -79,7 +79,6 @@ export default class MyBody extends React.Component {
                     </tr>
                     </tbody>
                 </table>
-
             </div>
         )
     }

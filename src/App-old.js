@@ -11,11 +11,22 @@ export default class App extends React.Component {
     //     </div>
     // );
 
+    state = {
+        users: [],
+        isFirst: true,
+        isLoading: false,
+        errorMessage: ""
+    }
+
+    updateAppState = (users) => {
+        console.log(users)
+
+    }
 
     render() {
         return (
             <div className="App">
-                <SearchCommon/>
+                <SearchCommon updateAppState={this.updateAppState}/>
                 <List/>
             </div>
         );

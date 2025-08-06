@@ -24,3 +24,7 @@ yarn-error.log*
 
 .eslintcache
 ./.eslintcache
+
+.idea
+yarn.lock
+pnpm-lock.yaml

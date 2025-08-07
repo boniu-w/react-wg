@@ -27,11 +27,11 @@ export default class SearchCommon extends React.Component {
         let githubUrl = `https://api.github.com/search/users?q=${searchText}`;
         axios.get(githubUrl).then(
             (response) => {
-                console.log('success', response);
+                console.log('success, 并开始发布事件 searchGitHub', response);
                 PubSub.publish("searchGitHub", {isLoading: false, data: response.data});
             },
             (error) => {
-                console.log('error', error);
+                console.log('error, 并开始发布事件 searchGitHub', error);
                 PubSub.publish("searchGitHub", {isLoading: false, errorMessage: error.message});
             }
         )

@@ -30,6 +30,12 @@ export default class List extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        PubSub.unsubscribe("searchGitHub", (_, arg) => {
+            console.log("<UNK>searchGitHub", arg)
+        })
+    }
+
     render() {
         return (
             <div>

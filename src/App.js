@@ -3,6 +3,7 @@ import "./App.css"
 import React from "react"
 import SearchCommon from "./component/search/SearchCommon.jsx"
 import List from "./component/search/search-result/List.jsx"
+import List1 from "./component/search/search-result/List1";
 
 export default class App extends React.Component {
     // return (
@@ -16,7 +17,7 @@ export default class App extends React.Component {
         return (
             <div className="App">
                 <SearchCommon/>
-                <List></List>
+                <List1></List1>
             </div>
         );
     }

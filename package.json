@@ -6,15 +6,15 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.3",
-    "antd": "^4.21.4",
+    "antd": "^5.26.7",
     "axios": "^0.27.2",
+    "customize-cra": "^1.0.0",
     "pubsub-js": "^1.9.4",
     "react": "^17.0.1",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
-    "web-vitals": "^0.2.4",
-    "react-app-rewired": "^2.2.1",
-    "customize-cra": "^1.0.0"
+    "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "PowerShell -Command $env:NODE_OPTIONS='--openssl-legacy-provider'; react-app-rewired start",
@@ -39,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-refresh": "^0.17.0"
   }
 }

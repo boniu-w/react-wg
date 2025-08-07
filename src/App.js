@@ -16,7 +16,7 @@ export default class App extends React.Component {
         return (
             <div className="App">
                 <SearchCommon/>
-                <List/>
+                <List></List>
             </div>
         );
     }

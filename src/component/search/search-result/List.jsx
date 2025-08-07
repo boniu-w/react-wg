@@ -3,7 +3,6 @@ import PubSub from "pubsub-js"
 
 export default class List extends React.Component {
 
-
     state = {
         users: [],
         isFirst: true,
@@ -13,8 +12,21 @@ export default class List extends React.Component {
 
     componentDidMount() {
         // 订阅消息
-        PubSub.subscribe("searchGitHub", (_, data)=>{
-            console.log("订阅searchGitHub", data)
+        PubSub.subscribe("searchGitHub", (_, arg) => {
+            if (arg.data != null) {
+                console.log("订阅searchGitHub", arg)
+                console.log("data.items", arg.data.items)
+
+                for (let item of arg.data.items) {
+                    item.name = "1";
+                    item.age = 1;
+                    item.phoneNumber = 1;
+                }
+                this.setState({
+                    users: arg.data.items,
+                    isLoading: true
+                })
+            }
         })
     }
 
@@ -22,20 +34,24 @@ export default class List extends React.Component {
         return (
             <div>
                 <table>
-                    <thead>thead</thead>
+                    <thead>
                     <tr>
-                        <td>1111</td>
-                        <td>222222</td>
-                        <td>3333</td>
-                        <td>44444</td>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>age</td>
+                        <td>phoneNumber</td>
                     </tr>
-                    <tr>
-                        <td>ssss</td>
-                        <td>aaaaa</td>
-                        <td>dddddd</td>
-                        <td>ccccc</td>
-                    </tr>
-                    <tfoot>tfoot</tfoot>
+                    </thead>
+                    <tbody>
+                    {this.state.users.map(user => {
+                        return <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.name}</td>
+                            <td>{user.age}</td>
+                            <td>{user.phoneNumber}</td>
+                        </tr>
+                    })}
+                    </tbody>
                 </table>
             </div>
         )

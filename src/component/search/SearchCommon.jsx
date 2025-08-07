@@ -4,6 +4,8 @@ import PubSub from "pubsub-js";
 
 export default class SearchCommon extends React.Component {
 
+    thisData = {}
+
     render() {
         return (
             <div>
@@ -29,6 +31,7 @@ export default class SearchCommon extends React.Component {
             (response) => {
                 console.log('success, 并开始发布事件 searchGitHub', response);
                 PubSub.publish("searchGitHub", {isLoading: false, data: response.data});
+                this.thisData = response.data;
             },
             (error) => {
                 console.log('error, 并开始发布事件 searchGitHub', error);

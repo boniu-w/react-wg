@@ -1,53 +1,60 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Flex, Table } from 'antd';
+import {Button, Flex, Table} from 'antd';
+import Pubsub from "pubsub-js";
 
 // 表格列配置
 const columns = [
-    { title: 'Name', dataIndex: 'name' },
-    { title: 'Age', dataIndex: 'age' },
-    { title: 'Address', dataIndex: 'address' },
+    {title: 'Id', dataIndex: 'id'},
+    {title: 'Name', dataIndex: 'name'},
+    {title: 'Age', dataIndex: 'age'},
+    {title: 'Address', dataIndex: 'address'},
 ];
 
-// 生成示例数据
-const dataSource = Array.from({ length: 46 }).map((_, i) => ({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-}));
-
 const List1 = () => {
-    // 模拟 componentDidMount：组件挂载时执行一次
-    useEffect(() => {
-        console.log('组件挂载完成（相当于componentDidMount）');
+    // 使用 useState 管理表格数据，这样数据变化时会触发重新渲染
+    // 初始化数据时，确保 key 唯一（这里用索引 i 作为 key，前提是数据不会重新排序）
+    let users = Array.from({length: 46})
+        .map((_, i) => ({
+            key: i, // 唯一 key（必须）
+            id: i,
+            name: `Edward King ${i}`,
+            age: 32,
+            address: `London, Park Lane no. ${i}`,
+        }));
 
-        // 这里可以写需要在组件挂载后执行的逻辑
-        // 比如发起接口请求、初始化数据、绑定事件等
-        const fetchData = async () => {
-            try {
-                const response = await fetch('https://api.example.com/data');
-                const data = await response.json();
-                console.log('获取到数据：', data);
-            } catch (error) {
-                console.error('请求失败：', error);
-            }
-        };
-
-        fetchData();
-
-        // 可选：返回一个清理函数，相当于 componentWillUnmount
-        return () => {
-            console.log('组件即将卸载（相当于componentWillUnmount）');
-            // 这里可以写清理逻辑，比如取消请求、移除事件监听等
-        };
-    }, []); // 空依赖数组：只在挂载和卸载时执行
+    const [dataSource, setDataSource] = useState(users);
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        console.log('组件挂载完成');
+
+        // 订阅事件
+        const topicToken = Pubsub.subscribe('searchGitHub', (topic, data) => {
+            console.log(`收到 ${topic} 事件，数据：`, data);
+
+            if (data?.data?.items) {
+                // 处理远程数据：如果没有 key，手动添加（例如用 id 或索引）
+                const newData = data.data.items.map((item, index) => ({
+                    // 优先使用数据自带的唯一标识（如 id），没有则用索引
+                    key: item.id || index,
+                    ...item // 其他字段
+                }));
+                setDataSource(newData); // 更新状态
+            }
+        });
+
+        // 清理函数：正确取消订阅的方式
+        return () => {
+            console.log('组件即将卸载');
+            Pubsub.unsubscribe(topicToken); // 使用订阅时返回的 token 取消订阅
+        };
+    }, []);
+
+    // 其他代码保持不变...
     const start = () => {
         setLoading(true);
-        // 模拟 AJAX 请求完成后清空选择
         setTimeout(() => {
             setSelectedRowKeys([]);
             setLoading(false);

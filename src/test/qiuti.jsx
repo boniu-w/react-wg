@@ -21,8 +21,11 @@ import React, { useState, useEffect, useRef } from 'react';
 const GlobeWithNumbers = () => {
   // 每个数字独立的旋转角度（初始均为 0°）
   const [rotations, setRotations] = useState(Array(12).fill(0));
-  // 每个数字的速度（° / 帧），按索引递增：0.15 ~ 1.25
-  const speeds = Array.from({ length: 12 }, (_, i) => 0.15 + i * 0.1);
+  // 每个数字的速度（° / 帧）
+  // 公式：v_i = 0.025 + i × 0.1（i = 1~12），范围 0.125 ~ 1.225
+  // 第 3600 帧所有数字同时到达北极（90°），圈数 = v_i × 10
+  const speeds = Array.from({ length: 12 }, (_, i) => 0.025 + (i + 1) * 0.1);
+//   const speeds = Array.from({ length: 12 }, (_, i) => 0.15 + i * 0.1);
   // 暂停标记，使用 ref 避免 effect 重建
   const isPausedRef = useRef(false);
   // 生成 1~12 的数字数组

@@ -4,6 +4,8 @@ import React from "react"
 import SearchCommon from "./component/search/SearchCommon.jsx"
 import List from "./component/search/search-result/List.jsx"
 import List1 from "./component/search/search-result/List1";
+import GlobeWithNumbers from "./test/qiuti.jsx";
+// import GlobeWithNumbers from "./test/qiuti2.jsx";
 
 export default class App extends React.Component {
     // return (
@@ -16,8 +18,9 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <SearchCommon/>
-                <List1></List1>
+                {/* <SearchCommon/> */}
+                {/* <List1></List1> */}
+                <GlobeWithNumbers/>
             </div>
         );
     }

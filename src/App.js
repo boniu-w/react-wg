@@ -4,8 +4,9 @@ import React from "react"
 import SearchCommon from "./component/search/SearchCommon.jsx"
 import List from "./component/search/search-result/List.jsx"
 import List1 from "./component/search/search-result/List1";
-import GlobeWithNumbers from "./test/qiuti.jsx";
-// import GlobeWithNumbers from "./test/qiuti2.jsx";
+import GlobeWithNumbers from "./test/qiuti/qiuti.jsx";
+// import GlobeWithNumbers from "./test/qiuti/qiuti2.jsx";
+// import GlobeWithNumbers from "./test/qiuti/qiuti3.jsx";
 
 export default class App extends React.Component {
     // return (

@@ -1,70 +1,334 @@
-# Getting Started with Create React App
+# 3D 地球仪 — 数字同时到达两极问题
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 问题描述
 
-## Available Scripts
+12 个数字均匀分布在球体赤道上，每个数字沿自身经线绕 X 轴旋转（赤道 → 北极 → 赤道 → 南极 → 赤道），各数字速度不同。求当所有数字**同时**到达北极或南极时，各个数字分别转了多少圈。
 
-In the project directory, you can run:
+## 已知条件
 
-### `npm start`
+| 数字编号 | 速度 (°/帧) |
+|----------|------------|
+| 1 | 0.15 |
+| 2 | 0.25 |
+| 3 | 0.35 |
+| 4 | 0.45 |
+| 5 | 0.55 |
+| 6 | 0.65 |
+| 7 | 0.75 |
+| 8 | 0.85 |
+| 9 | 0.95 |
+| 10 | 1.05 |
+| 11 | 1.15 |
+| 12 | 1.25 |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+速度公式：`v(i) = 0.15 + (i - 1) × 0.1`（i = 1, 2, ..., 12）
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 北极/南极对应的角度
 
-### `npm test`
+- **北极**：`90° + 360° × k`（k = 0, 1, 2, ...）
+- **南极**：`270° + 360° × k`（k = 0, 1, 2, ...）
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 解题过程
 
-### `npm run build`
+### 第 1 步：列方程
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+设第 n 帧时数字 i 的旋转角度为：
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+angle_i = v_i × n
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+当某个数字到达北极时，角度满足：
 
-### `npm run eject`
+```
+v_i × n ≡ 90° (mod 360°)
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+当某个数字到达南极时，角度满足：
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+v_i × n ≡ 270° (mod 360°)
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+我们需要找一个帧号 n，使得每个数字的角度要么是 90°（北极），要么是 270°（南极）——即每个数字的角度与 90° 模 360° 同余于 0 或 180°。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+换言之，所有数字需要同时满足：
 
-## Learn More
+```
+(v_i × n) mod 360° ∈ {90°, 270°}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 第 2 步：将速度化为分数
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+v_1  = 0.15 = 3/20
+v_2  = 0.25 = 1/4
+v_3  = 0.35 = 7/20
+v_4  = 0.45 = 9/20
+v_5  = 0.55 = 11/20
+v_6  = 0.65 = 13/20
+v_7  = 0.75 = 3/4
+v_8  = 0.85 = 17/20
+v_9  = 0.95 = 19/20
+v_10 = 1.05 = 21/20
+v_11 = 1.15 = 23/20
+v_12 = 1.25 = 5/4
+```
 
-### Code Splitting
+### 第 3 步：转化为整数角度
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+角度分量为 0.05 的倍数（因为所有速度都是 0.05 的倍数），设 n 帧后：
 
-### Analyzing the Bundle Size
+```
+0.05 × n = k（k 为整数）
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+则每个数字的角度为：
 
-### Making a Progressive Web App
+```
+angle_i = v_i × n = (v_i / 0.05) × k
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+即：
 
-### Advanced Configuration
+```
+a_1  = 3k   （对应 0.15 / 0.05 = 3）
+a_2  = 5k   （对应 0.25 / 0.05 = 5）
+a_3  = 7k
+a_4  = 9k
+a_5  = 11k
+a_6  = 13k
+a_7  = 15k
+a_8  = 17k
+a_9  = 19k
+a_10 = 21k
+a_11 = 23k
+a_12 = 25k
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+每个数字到达北极：`a_i ≡ 90° (mod 360°)`，即 `a_i mod 360° = 90°`
 
-### Deployment
+每个数字到达南极：`a_i ≡ 270° (mod 360°)`，即 `a_i mod 360° = 270°`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 第 4 步：求解 k
 
-### `npm run build` fails to minify
+需要在 0.05° 的精度下，`v_i × n` 模 360° 等于 90° 或 270°。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+即：对于每个 i，存在整数 p_i 使得：
+
+```
+v_i × n = 90° + p_i × 360°   （北极）
+```
+或
+```
+v_i × n = 270° + p_i × 360°   （南极）
+```
+
+代入速度分数形式 `v_i = m_i / 20`（其中 m_i = 3, 5, 7, ..., 25）：
+
+```
+(m_i × n) / 20 = 90 + 360 × p_i       →   m_i × n = 1800 + 7200 × p_i
+(m_i × n) / 20 = 270 + 360 × p_i       →   m_i × n = 5400 + 7200 × p_i
+```
+
+合并：`m_i × n` 必须都能写成 `1800 + 3600 × q_i` 的形式（其中 `q_i = 0, 1, 3, ...` 保证结果为 1800 或 5400 模 7200）。
+
+由于 m_i 都是奇数（3, 5, 7, ..., 25），且 n 必须使得 `m_i × n ≡ 1800 (mod 3600)` 对所有 m_i 成立。
+
+### 第 5 步：求 n
+
+1800 = 3600 / 2，所以 `m_i × n ≡ 1800 (mod 3600)` 对所有奇数 m_i 都成立。
+
+这意味着 n 必须满足：`n ≡ 1800 (mod 3600 * 2)`？不，让我们仔细算。
+
+对于 `m_i × n ≡ 1800 (mod 3600)`：
+
+```
+m_i × n mod 3600 = 1800
+```
+
+设 n = 1800：`m_i × 1800 mod 3600 = (m_i mod 2) × 1800 = 1 × 1800 = 1800` ✓
+
+所以 **n = 1800** 是一个解。
+
+验证：
+- m=3：3×1800=5400，5400 mod 3600 = 1800 ✓
+- m=5：5×1800=9000，9000 mod 3600 = 1800 ✓
+- ... 所有奇数 m 都满足
+
+### 第 6 步：验证每个数字落在哪极
+
+n = 1800 帧时，`k = n × 0.05 = 90`，所以角度为：
+
+```
+a_i = m_i × 90（单位：0.05° 的倍数，转回度需 × 0.05）
+angle_i = a_i × 0.05° = m_i × 90 × 0.05° = m_i × 4.5°
+```
+
+| 数字 | m_i | angle_i (°) | angle mod 360° | 位置 |
+|------|-----|-------------|----------------|------|
+| 1 | 3 | 13.5 | 13.5 | — |
+| ... | ... | ... | ... | ... |
+
+等等，这个结果不对。让我重新计算。
+
+r 角度 = `v_i × n = 0.15 × 1800 = 270°`（数字1）
+270° → 南极 ✓
+
+r 角度 = `0.25 × 1800 = 450°`，450 mod 360 = 90° → 北极 ✓
+
+r 角度 = `0.35 × 1800 = 630°`，630 mod 360 = 270° → 南极 ✓
+
+规律：`v_i × 1800 = (3 + 2(i-1)) × 90 = 270 + 180 × (i-1)`
+当 i 为奇数时 270 + 偶数×180 = 270 → 南极
+当 i 为偶数时 270 + 奇数×180 = 450 = 90 → 北极
+
+所以 → 奇数号（1,3,5,7,9,11）在南极，偶数号（2,4,6,8,10,12）在北极。
+
+### 第 7 步：计算转圈数
+
+```
+圈数 = v_i × 1800 / 360 = v_i × 5
+```
+
+## 答案
+
+**第 1800 帧时，所有数字同时到达两极：**
+
+| 数字 | 速度 (°/帧) | 转圈数 | 位置 |
+|------|------------|--------|------|
+| 1 | 0.15 | **0.75** 圈 | 南极 |
+| 2 | 0.25 | **1.25** 圈 | 北极 |
+| 3 | 0.35 | **1.75** 圈 | 南极 |
+| 4 | 0.45 | **2.25** 圈 | 北极 |
+| 5 | 0.55 | **2.75** 圈 | 南极 |
+| 6 | 0.65 | **3.25** 圈 | 北极 |
+| 7 | 0.75 | **3.75** 圈 | 南极 |
+| 8 | 0.85 | **4.25** 圈 | 北极 |
+| 9 | 0.95 | **4.75** 圈 | 南极 |
+| 10 | 1.05 | **5.25** 圈 | 北极 |
+| 11 | 1.15 | **5.75** 圈 | 南极 |
+| 12 | 1.25 | **6.25** 圈 | 北极 |
+
+规律：
+- 相邻数字差 **0.5 圈**（因为速度差 0.1°/帧，经过 1800 帧恰好差 180°，即半圈）
+- 奇数号数字落**南极**（270°），偶数号数字落**北极**（90°）
+- 这是同时到达两极的最小帧号
+
+---
+
+# 3D 地球仪 — 数字同时到达北极问题
+
+## 问题描述
+
+12 个数字均匀分布在球体赤道上，各数字速度不同（同问题一）。求当所有数字**同时**只到达**北极**时，各个数字分别转了多少圈。
+
+## 答案
+
+**不可能。** 12 个数字永远无法同时到达北极（也无法同时只到达南极）。
+
+## 解题过程
+
+### 第 1 步：到达北极的条件
+
+数字 i 到达北极需满足：
+
+```
+v_i × n ≡ 90° (mod 360°)
+```
+
+代入 `v_i = m_i / 20`（m_i = 3, 5, 7, ..., 25，全为奇数），乘 20 倍：
+
+```
+m_i × n ≡ 1800 (mod 7200)
+```
+
+### 第 2 步：取相邻两个数字联立
+
+对 m=3 和 m=5：
+
+```
+3n = 1800 + 7200 × a   →   n = 600 + 2400 × a
+5n = 1800 + 7200 × b   →   n = 360 + 1440 × b
+```
+
+联立两式：
+
+```
+600 + 2400a = 360 + 1440b
+240 + 2400a = 1440b
+1 + 10a = 6b
+10a - 6b = -1
+```
+
+### 第 3 步：奇偶性矛盾
+
+```
+10a - 6b = 2 × (5a - 3b)   →   必为偶数
+```
+
+等式右边 **-1 是奇数**。
+
+**偶数 ≠ 奇数**，方程无整数解。
+
+这意味着数字 1 和数字 2 就**无法同时**到达北极，更不用说全部 12 个数字。
+
+### 第 4 步：几何直觉验证
+
+相邻数字速度差 0.1°/帧。若两数同时到北极（90°），累积角度差必须为 360° 整数倍：
+
+```
+0.1 × n = 360 × k   →   n = 3600 × k
+```
+
+取 k=1 即 n=3600 帧，代入验证：
+
+```
+v_i × 3600 = (m_i / 20) × 3600 = m_i × 180
+```
+
+m_i 为奇数，`奇数 × 180` 模 360 永远等于 **180°**（赤道背面的点），不是 90°！
+
+| 数字 | v_i | v_i × 3600 | mod 360° |
+|------|-----|-----------|----------|
+| 1 | 0.15 | 540° | **180°** ≠ 90° |
+| 2 | 0.25 | 900° | **180°** ≠ 90° |
+| ... | ... | ... | **180°** |
+
+n = 3600 × 2 = 7200 帧时：
+```
+v_i × 7200 = m_i × 360
+m_i × 360 mod 360 = 0°    ≠ 90°
+```
+
+n = 3600 × 3 = 10800 帧同理 → 180°，循环往复，永远到不了 90°。
+
+### 第 5 步：根本原因
+
+所有速度是 **0.05 的奇数倍**（即分子 m_i 全是奇数），导致：
+
+```
+v_i × n = (奇数/20) × n
+```
+
+要使此式模 360° 等于 90°，需要 `n` 满足**矛盾方程**——能消掉分子为偶数（使两数角度差为 360° 整数倍），但奇分子一出现就破坏同余条件。最终导致"角度差同步"与"目标角度 90°"之间存在**奇偶性冲突**。
+
+## 总结对比
+
+| 问题 | 目标位置 | 能否实现 | 原因 |
+|------|---------|---------|------|
+| 同时到两极 | 90° 或 270° | ✅ 能，n=1800 | 目标集合包含 90° 和 270°，化解了奇偶冲突 |
+| 同时只到北极 | 90° | ❌ 不能 | 奇数分子 × n ≡ 90° 不可解 |
+| 同时只到南极 | 270° | ❌ 不能 | 同上，无整数解 |
+
+## 启动项目
+
+```bash
+npm start
+```
+
+或
+
+```bash
+yarn start
+```

@@ -1,0 +1,11 @@
+overrides:
+  # react-scripts 4.0.1 pins @babel/core 7.12.3, but babel-preset-react-app 10.1.0
+  # requires ^7.16.0. Pin the preset version that matches CRA 4's Babel toolchain.
+  babel-preset-react-app: 10.0.0
+
+# These packages' install scripts are not needed to build this app.
+allowBuilds:
+  core-js: false
+  core-js-pure: false
+  ejs: false
+  es5-ext: false
